@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
 
     // Store metrics in database
     const storedMetrics = await Promise.all(
-      metrics.map((metric) =>
+      metrics.map((metric: any) =>
         prisma.metric.upsert({
           where: {
             campaignId_ts_key: {
