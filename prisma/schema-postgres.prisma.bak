@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Campaign {
+  id        String   @id @default(cuid())
+  name      String
+  platform  String
+  cost      Float?
+  revenue   Float?
+  createdAt DateTime @default(now())
+  metrics   Metric[]
+}
+
+model Metric {
+  id         String   @id @default(cuid())
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  campaignId String
+  ts         DateTime
+  key        String
+  value      Float
+  meta       Json?
+  @@index([campaignId, ts, key])
+  @@unique([campaignId, ts, key])
+}
